@@ -1,4 +1,6 @@
 from .Car import Car
+from utils import get_displacement, is_within_bounds, is_valid_position
+
 class Board:
     def __init__(self, grid):
         self.grid = grid
@@ -16,39 +18,14 @@ class Board:
         return cars
 
     def is_valid_move(self, car, direction):
-        dx, dy = 0, 0
-        if direction == "up" and car.orientation == "vertical":
-            dx = -1
-        elif direction == "down" and car.orientation == "vertical":
-            dx = 1
-        elif direction == "left" and car.orientation == "horizontal":
-            dy = -1
-        elif direction == "right" and car.orientation == "horizontal":
-            dy = 1
-        else:
+        dx, dy = get_displacement(direction)
+        if (dx == 0 and car.orientation != "horizontal") or (dy == 0 and car.orientation != "vertical"):
             return False
-
         new_positions = [(x + dx, y + dy) for x, y in car.positions]
-
-        if not all(0 <= x < len(self.grid) and 0 <= y < len(self.grid[0]) for x, y in new_positions):
-            return False
-
-        for x, y in new_positions:
-            if self.grid[x][y] != "." and self.grid[x][y] != car.name:
-                return False
-
-        return True
+        return is_within_bounds(new_positions, self.grid_size) and is_valid_position(self.grid, new_positions, car.name)
 
     def move_car(self, car, direction):
-        dx, dy = 0, 0
-        if direction == "up":
-            dx = -1
-        elif direction == "down":
-            dx = 1
-        elif direction == "left":
-            dy = -1
-        elif direction == "right":
-            dy = 1
+        dx, dy = get_displacement(direction)
 
         for x, y in car.positions:
             self.grid[x][y] = "."
