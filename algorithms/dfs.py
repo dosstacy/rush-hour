@@ -17,8 +17,6 @@ class RushHourSolverDFS:
                 visited.add(state_key)
 
                 if is_win_position(current):
-                    print("Solution found!")
-                    print(f"Solution found in {len(path)} steps.")
                     return path
 
                 for neighbor, action in get_neighbors(current):

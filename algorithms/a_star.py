@@ -1,10 +1,10 @@
 import heapq
 import itertools
-from utils import is_win_position, WIN_X, WIN_Y, get_neighbors
+from utils import is_win_position, WIN_X, WIN_Y, get_neighbors, MAIN_CAR
 
 def heuristic(state):
     """Евристика для A*"""
-    car = state.cars.get("A")
+    car = state.cars.get(MAIN_CAR)
     if car:
         target_row, target_col = WIN_X, WIN_Y
         blocking_cars = 0
@@ -18,14 +18,12 @@ def heuristic(state):
         return abs(car.positions[0][1] - target_col) + blocking_cars
     return float('inf')
 
-
 def reconstruct_path(came_from, current):
     path = []
     while current in came_from:
         current, action = came_from[current]
         path.append(action)
     return path[::-1]
-
 
 class A_star:
         def __init__(self, board):
@@ -48,6 +46,7 @@ class A_star:
 
                 _, _, current = heapq.heappop(open_set)
                 if is_win_position(current):
+                    #повертає послідовність ходів для візуалізації
                     return reconstruct_path(came_from, current)
 
                 visited.add(hash(current))
@@ -61,6 +60,4 @@ class A_star:
                         g_score[neighbor] = tentative_g_score
                         f_score[neighbor] = tentative_g_score + heuristic(neighbor)
                         heapq.heappush(open_set, (f_score[neighbor], next(self.counter), neighbor))
-
-            print("No solution found!")
             return None

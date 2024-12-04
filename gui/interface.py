@@ -1,4 +1,5 @@
 import tkinter as tk
+
 class RushHourGUI:
     def __init__(self, root, board):
         self.root = root
