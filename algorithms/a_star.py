@@ -1,17 +1,6 @@
 import heapq
 import itertools
-from utils import is_win_position, WIN_X, WIN_Y
-
-def get_neighbors(state):
-    neighbors = []
-    for car_name, car in state.cars.items():
-        for direction in ["up", "down", "left", "right"]:
-            if state.is_valid_move(car, direction):
-                new_state = state.copy()
-                new_state.move_car(new_state.cars[car_name], direction)
-                neighbors.append((new_state, (car_name, direction)))
-    return neighbors
-
+from utils import is_win_position, WIN_X, WIN_Y, get_neighbors
 
 def heuristic(state):
     """Евристика для A*"""
