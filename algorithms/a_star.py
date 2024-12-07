@@ -1,20 +1,20 @@
 import heapq
 import itertools
 from utils import is_win_position, WIN_X, WIN_Y, get_neighbors, MAIN_CAR
-from additional_logic import heuristic, reconstruct_path
+from .additional_logic import heuristic, reconstruct_path
 
 class A_star:
         def __init__(self, board):
-            self.start_state = board
+            self.board = board
             self.counter = itertools.count()  # Унікальний індекс для кожного елемента
 
         def solve(self):
             open_set = []
             visited = set()  # Для уникнення дублювання станів
-            heapq.heappush(open_set, (0, next(self.counter), self.start_state))
+            heapq.heappush(open_set, (0, next(self.counter), self.board))
             came_from = {}
-            g_score = {self.start_state: 0}
-            f_score = {self.start_state: heuristic(self.start_state)}
+            g_score = {self.board: 0}
+            f_score = {self.board: heuristic(self.board)}
 
             steps = 0
             while open_set:

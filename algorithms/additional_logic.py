@@ -1,3 +1,5 @@
+from utils import WIN_X, WIN_Y, MAIN_CAR, is_win_position
+
 def heuristic(state):
     car = state.cars.get(MAIN_CAR)
     if car:

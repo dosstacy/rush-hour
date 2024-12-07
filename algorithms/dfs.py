@@ -1,11 +1,11 @@
 from utils import is_win_position, get_neighbors
 
-class RushHourSolverDFS:
+class Dfs:
         def __init__(self, board):
-            self.initial_state = board
+            self.board = board
 
         def solve(self):
-            stack = [(self.initial_state, [])]
+            stack = [(self.board, [])]
             visited = set()
 
             while stack:

@@ -1,17 +1,17 @@
 import heapq
 import itertools
 from utils import is_win_position, WIN_X, WIN_Y, get_neighbors, MAIN_CAR
-from additional_logic import heuristic, reconstruct_path
+from .additional_logic import heuristic, reconstruct_path
 
 class GreedySearch:
     def __init__(self, board):
-        self.start_state = board
+        self.board = board
         self.counter = itertools.count()  # Унікальний індекс для кожного елемента
 
     def solve(self):
         open_set = []
         visited = set()  # Для уникнення дублювання станів
-        heapq.heappush(open_set, (heuristic(self.start_state), next(self.counter), self.start_state))
+        heapq.heappush(open_set, (heuristic(self.board), next(self.counter), self.board))
         came_from = {}
 
         steps = 0
