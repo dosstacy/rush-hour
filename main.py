@@ -3,7 +3,7 @@ import tkinter as tk
 
 def run_game():
     root = tk.Tk()
-    RushHourGame(root, 'levels/level1.txt')
+    RushHourGame(root, 'levels/level10.txt')
     root.mainloop()
 
 
