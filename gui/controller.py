@@ -5,18 +5,37 @@ from algorithms.a_star import A_star
 from algorithms.greedy_search import GreedySearch
 from utils import is_win_position, MAIN_CAR
 
-##TODO: rewrite interface class, do something with utils file - create a new class?
-
 class RushHourGame:
-    def __init__(self, root, level_file):
+    def __init__(self, root):
         self.root = root
-        self.level_file = level_file
-        self.board = Board(Board.init_board(level_file))
-        self.canvas = tk.Canvas(root, width=400, height=400)
-        self.canvas.pack()
+        self.board = None
+        self.canvas = None
         self.selected_car = None
 
-        self.create_buttons(root)
+        self.create_main_menu()
+
+    def create_main_menu(self):
+        self.main_menu_frame = tk.Frame(self.root)
+        self.main_menu_frame.pack()
+
+        play_button = tk.Button(self.main_menu_frame, text="Play!", command=self.show_level_menu)
+        play_button.pack(pady=10)
+
+    def show_level_menu(self):
+        self.main_menu_frame.pack_forget()
+        self.level_menu_frame = tk.Frame(self.root)
+        self.level_menu_frame.pack()
+
+        for i in range(1, 11):
+            level_button = tk.Button(self.level_menu_frame, text=f"Level {i}", command=lambda i=i: self.start_game(f"levels/level{i}.txt"))
+            level_button.pack(pady=5)
+
+    def start_game(self, level_file):
+        self.level_menu_frame.pack_forget()
+        self.board = Board(Board.init_board(level_file))
+        self.canvas = tk.Canvas(self.root, width=400, height=400)
+        self.canvas.pack()
+        self.create_buttons(self.root)
         self.draw_board()
         self.bind_keys()
 
@@ -30,8 +49,8 @@ class RushHourGame:
         a_star_button = tk.Button(root, text="A*", command=self.a_star_solve)
         a_star_button.pack(side=tk.LEFT)
 
-        a_star_button = tk.Button(root, text="Greedy Search", command=self.greedy_solve)
-        a_star_button.pack(side=tk.LEFT)
+        greedy_button = tk.Button(root, text="Greedy Search", command=self.greedy_solve)
+        greedy_button.pack(side=tk.LEFT)
 
     def bind_keys(self):
         self.root.bind("<Up>", lambda event: self.move_car("up"))
@@ -49,11 +68,10 @@ class RushHourGame:
                 x2, y2 = x1 + cell_size, y1 + cell_size
                 self.board.cars.get(MAIN_CAR)
 
-                # Встановлення кольору залежно від машинки
                 if cell == ".":
                     color = "white"
                 else:
-                    color = "red" if cell == "A" else "lightblue"  # Колір для A та інших машин
+                    color = "red" if cell == "A" else "lightblue"
 
                 rect = self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
                 if cell != ".":
@@ -90,8 +108,6 @@ class RushHourGame:
         self.update_board_view()
 
     def visualize_solution(self, solution):
-        """Відтворення рішення покроково."""
-
         def perform_step(index):
             if index >= len(solution):
                 is_win_position(self.board)
