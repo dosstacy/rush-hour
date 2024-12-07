@@ -1,7 +1,8 @@
 import tkinter as tk
 from elements.Board import Board
-from algorithms.dfs import RushHourSolverDFS
+from algorithms.dfs import Dfs
 from algorithms.a_star import A_star
+from algorithms.greedy_search import GreedySearch
 from utils import is_win_position, MAIN_CAR
 
 ##TODO: rewrite interface class, do something with utils file - create a new class?
@@ -29,6 +30,9 @@ class RushHourGame:
         a_star_button = tk.Button(root, text="A*", command=self.a_star_solve)
         a_star_button.pack(side=tk.LEFT)
 
+        a_star_button = tk.Button(root, text="Greedy Search", command=self.greedy_solve)
+        a_star_button.pack(side=tk.LEFT)
+
     def bind_keys(self):
         self.root.bind("<Up>", lambda event: self.move_car("up"))
         self.root.bind("<Down>", lambda event: self.move_car("down"))
@@ -43,14 +47,13 @@ class RushHourGame:
             for col_idx, cell in enumerate(row):
                 x1, y1 = col_idx * cell_size, row_idx * cell_size
                 x2, y2 = x1 + cell_size, y1 + cell_size
-                main_car = self.board.cars.get(MAIN_CAR)
+                self.board.cars.get(MAIN_CAR)
 
+                # Встановлення кольору залежно від машинки
                 if cell == ".":
                     color = "white"
-                # elif main_car and (col_idx, row_idx) in main_car.positions:
-                #     color = "red"
                 else:
-                    color = "lightblue"
+                    color = "red" if cell == "A" else "lightblue"  # Колір для A та інших машин
 
                 rect = self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
                 if cell != ".":
@@ -103,7 +106,7 @@ class RushHourGame:
     ################################################## DFS #################################################################
 
     def dfs_solve(self):
-        solver = RushHourSolverDFS(self.board)
+        solver = Dfs(self.board)
         solution = solver.solve()
         if solution:
             print("Solution found!")
@@ -124,3 +127,16 @@ class RushHourGame:
             self.visualize_solution(solution)
         else:
             print("No solution found with A*!")
+
+    ################################################## GREEDY SEARCH ##############################################################
+
+    def greedy_solve(self):
+        print("Solving with Greedy Search...")
+        solver = GreedySearch(self.board)
+        solution = solver.solve()
+        if solution:
+            print("Solution found!")
+            print(f"Greedy Search solution found in {len(solution)} steps.")
+            self.visualize_solution(solution)
+        else:
+            print("No solution found with Greedy Search!")
