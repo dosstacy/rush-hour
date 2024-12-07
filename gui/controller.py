@@ -4,10 +4,19 @@ from algorithms.dfs import Dfs
 from algorithms.a_star import A_star
 from algorithms.greedy_search import GreedySearch
 from utils import is_win_position, MAIN_CAR
+from tkinter import ttk
+from PIL import Image, ImageTk
+
+##TODO: змінити дизайн кнопок, розташувати кнопки з рівнями в 2-3 ряди, ігрове поле посередині (якщо можна, то з заокругленими кутами) + bg ззаду
+##TODO: коли користувач обирає інший алгоритм - рестартнути поле, кнопка "повернути назад до рівнів"?
+##TODO: фото замість прямокутників?
+##TODO: розділити клас RushHourGame на декілька частин
 
 class RushHourGame:
     def __init__(self, root):
+        self.main_menu_frame = None
         self.root = root
+        self.root.geometry("700x700")
         self.board = None
         self.canvas = None
         self.selected_car = None
@@ -16,19 +25,31 @@ class RushHourGame:
 
     def create_main_menu(self):
         self.main_menu_frame = tk.Frame(self.root)
-        self.main_menu_frame.pack()
+        self.main_menu_frame.pack(fill="both", expand=True)
 
-        play_button = tk.Button(self.main_menu_frame, text="Play!", command=self.show_level_menu)
-        play_button.pack(pady=10)
+        background_image = Image.open("images/bg.png")
+        background_image = background_image.resize((700, 700))
+        self.bg_photo = ImageTk.PhotoImage(background_image)
+        self.bg_label = tk.Label(self.main_menu_frame, image=self.bg_photo)
+        self.bg_label.place(relwidth=1, relheight=1)
+
+        play_button = ttk.Button(self.main_menu_frame, text="Play", command=self.show_level_menu)
+        play_button.place(relx=0.5, rely=0.5, anchor="center")
 
     def show_level_menu(self):
         self.main_menu_frame.pack_forget()
         self.level_menu_frame = tk.Frame(self.root)
-        self.level_menu_frame.pack()
+        self.level_menu_frame.pack(fill="both", expand=True)
+
+        background_image = Image.open("images/bg2.png")
+        background_image = background_image.resize((700, 700))
+        self.bg_photo2 = ImageTk.PhotoImage(background_image)
+        self.bg_label = tk.Label(self.level_menu_frame, image=self.bg_photo2)
+        self.bg_label.place(relwidth=1, relheight=1)
 
         for i in range(1, 11):
-            level_button = tk.Button(self.level_menu_frame, text=f"Level {i}", command=lambda i=i: self.start_game(f"levels/level{i}.txt"))
-            level_button.pack(pady=5)
+            level_button = ttk.Button(self.level_menu_frame, text=f"Level {i}", command=lambda i=i: self.start_game(f"levels/level{i}.txt"))
+            level_button.place(relx=0.5, rely=0.09 * i, anchor="center")
 
     def start_game(self, level_file):
         self.level_menu_frame.pack_forget()
@@ -40,16 +61,16 @@ class RushHourGame:
         self.bind_keys()
 
     def create_buttons(self, root):
-        solve_button = tk.Button(root, text="DFS", command=self.dfs_solve)
+        solve_button = ttk.Button(root, text="DFS", command=self.dfs_solve)
         solve_button.pack(side=tk.LEFT)
 
-        restart_button = tk.Button(root, text="Restart", command=self.restart_game)
+        restart_button = ttk.Button(root, text="Restart", command=self.restart_game)
         restart_button.pack(side=tk.LEFT)
 
-        a_star_button = tk.Button(root, text="A*", command=self.a_star_solve)
+        a_star_button = ttk.Button(root, text="A*", command=self.a_star_solve)
         a_star_button.pack(side=tk.LEFT)
 
-        greedy_button = tk.Button(root, text="Greedy Search", command=self.greedy_solve)
+        greedy_button = ttk.Button(root, text="Greedy Search", command=self.greedy_solve)
         greedy_button.pack(side=tk.LEFT)
 
     def bind_keys(self):
