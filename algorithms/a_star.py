@@ -1,29 +1,7 @@
 import heapq
 import itertools
 from utils import is_win_position, WIN_X, WIN_Y, get_neighbors, MAIN_CAR
-
-def heuristic(state):
-    """Евристика для A*"""
-    car = state.cars.get(MAIN_CAR)
-    if car:
-        target_row, target_col = WIN_X, WIN_Y
-        blocking_cars = 0
-
-        # Рахуємо кількість машин, які блокують шлях "A"
-        for col in range(car.positions[0][1] + 1, target_col + 1):
-            if state.grid[car.positions[0][0]][col] != ".":
-                blocking_cars += 1
-
-        # Відстань до цільової комірки
-        return abs(car.positions[0][1] - target_col) + blocking_cars
-    return float('inf')
-
-def reconstruct_path(came_from, current):
-    path = []
-    while current in came_from:
-        current, action = came_from[current]
-        path.append(action)
-    return path[::-1]
+from additional_logic import heuristic, reconstruct_path
 
 class A_star:
         def __init__(self, board):
