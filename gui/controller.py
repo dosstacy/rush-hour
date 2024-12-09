@@ -4,10 +4,9 @@ from algorithms.dfs import Dfs
 from algorithms.a_star import A_star
 from algorithms.greedy_search import GreedySearch
 from utils import is_win_position, MAIN_CAR
-from tkinter import ttk
 from PIL import Image, ImageTk
 
-##TODO: змінити дизайн кнопок, розташувати кнопки з рівнями в 2-3 ряди, ігрове поле посередині (якщо можна, то з заокругленими кутами) + bg ззаду
+##TODO: win
 ##TODO: коли користувач обирає інший алгоритм - рестартнути поле, кнопка "повернути назад до рівнів"?
 ##TODO: фото замість прямокутників?
 ##TODO: розділити клас RushHourGame на декілька частин
@@ -20,7 +19,6 @@ class RushHourGame:
         self.board = None
         self.canvas = None
         self.selected_car = None
-
         self.create_main_menu()
 
     def create_main_menu(self):
@@ -33,8 +31,8 @@ class RushHourGame:
         self.bg_label = tk.Label(self.main_menu_frame, image=self.bg_photo)
         self.bg_label.place(relwidth=1, relheight=1)
 
-        play_button = ttk.Button(self.main_menu_frame, text="Play", command=self.show_level_menu)
-        play_button.place(relx=0.5, rely=0.5, anchor="center")
+        play_button = tk.Button(self.main_menu_frame, text="Play", font=("Helvetica", 16, "bold"), command=self.show_level_menu, height=2, width=12)
+        play_button.place(relx=0.5, rely=0.6, anchor="center")
 
     def show_level_menu(self):
         self.main_menu_frame.pack_forget()
@@ -48,30 +46,44 @@ class RushHourGame:
         self.bg_label.place(relwidth=1, relheight=1)
 
         for i in range(1, 11):
-            level_button = ttk.Button(self.level_menu_frame, text=f"Level {i}", command=lambda i=i: self.start_game(f"levels/level{i}.txt"))
-            level_button.place(relx=0.5, rely=0.09 * i, anchor="center")
+            row = (i - 1) // 5
+            col = (i - 1) % 5
+            level_button = tk.Button(self.level_menu_frame, text=f"Level {i}", height=3, width=10, font=("Helvetica", 11, "bold"),
+                                      command=lambda i=i: self.start_game(f"levels/level{i}.txt"))
+            level_button.place(relx=0.17 * (col + 1), rely=0.35 * (row + 1), anchor="center")
 
     def start_game(self, level_file):
         self.level_menu_frame.pack_forget()
+        self.game_frame = tk.Frame(self.root)
+        self.game_frame.pack(fill="both", expand=True)
+
+
+        background_image = Image.open("images/bg2.png")
+        background_image = background_image.resize((700, 700))
+        self.bg_photo2 = ImageTk.PhotoImage(background_image)
+        self.bg_label = tk.Label(self.game_frame, image=self.bg_photo2)
+        self.bg_label.place(relwidth=1, relheight=1)
+
         self.board = Board(Board.init_board(level_file))
-        self.canvas = tk.Canvas(self.root, width=400, height=400)
-        self.canvas.pack()
+        self.canvas = tk.Canvas(self.root, width=390, height=390)
+        self.canvas.place(relx=0.5, rely=0.5, anchor="center")
+
         self.create_buttons(self.root)
         self.draw_board()
         self.bind_keys()
 
     def create_buttons(self, root):
-        solve_button = ttk.Button(root, text="DFS", command=self.dfs_solve)
-        solve_button.pack(side=tk.LEFT)
+        solve_button = tk.Button(root, text="DFS", font=("Helvetica", 12, "bold"), command=self.dfs_solve, height=2, width=10)
+        solve_button.place(relx=0.3, rely=0.15, anchor="center")
 
-        restart_button = ttk.Button(root, text="Restart", command=self.restart_game)
-        restart_button.pack(side=tk.LEFT)
+        restart_button = tk.Button(root, text="Restart", font=("Helvetica", 12, "bold"), command=self.restart_game, height=2, width=10)
+        restart_button.place(relx=0.5, rely=0.9, anchor="center")
 
-        a_star_button = ttk.Button(root, text="A*", command=self.a_star_solve)
-        a_star_button.pack(side=tk.LEFT)
+        a_star_button = tk.Button(root, text="A*", font=("Helvetica", 12, "bold"), command=self.a_star_solve, height=2, width=10)
+        a_star_button.place(relx=0.5, rely=0.15, anchor="center")
 
-        greedy_button = ttk.Button(root, text="Greedy Search", command=self.greedy_solve)
-        greedy_button.pack(side=tk.LEFT)
+        greedy_button = tk.Button(root, text="Greedy Search", font=("Helvetica", 12, "bold"), command=self.greedy_solve, height=2, width=11)
+        greedy_button.place(relx=0.7, rely=0.15, anchor="center")
 
     def bind_keys(self):
         self.root.bind("<Up>", lambda event: self.move_car("up"))
