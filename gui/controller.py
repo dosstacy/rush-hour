@@ -13,9 +13,11 @@ from PIL import Image, ImageTk
 
 class RushHourGame:
     def __init__(self, root):
+        self.level_file = None
         self.main_menu_frame = None
         self.root = root
-        self.root.geometry("700x700")
+        self.root.geometry("800x750")
+
         self.board = None
         self.canvas = None
         self.selected_car = None
@@ -26,7 +28,7 @@ class RushHourGame:
         self.main_menu_frame.pack(fill="both", expand=True)
 
         background_image = Image.open("images/bg.png")
-        background_image = background_image.resize((700, 700))
+        background_image = background_image.resize((800, 800))
         self.bg_photo = ImageTk.PhotoImage(background_image)
         self.bg_label = tk.Label(self.main_menu_frame, image=self.bg_photo)
         self.bg_label.place(relwidth=1, relheight=1)
@@ -40,7 +42,7 @@ class RushHourGame:
         self.level_menu_frame.pack(fill="both", expand=True)
 
         background_image = Image.open("images/bg2.png")
-        background_image = background_image.resize((700, 700))
+        background_image = background_image.resize((800, 800))
         self.bg_photo2 = ImageTk.PhotoImage(background_image)
         self.bg_label = tk.Label(self.level_menu_frame, image=self.bg_photo2)
         self.bg_label.place(relwidth=1, relheight=1)
@@ -57,16 +59,16 @@ class RushHourGame:
         self.game_frame = tk.Frame(self.root)
         self.game_frame.pack(fill="both", expand=True)
 
-
         background_image = Image.open("images/bg2.png")
-        background_image = background_image.resize((700, 700))
+        background_image = background_image.resize((800, 800))
         self.bg_photo2 = ImageTk.PhotoImage(background_image)
         self.bg_label = tk.Label(self.game_frame, image=self.bg_photo2)
         self.bg_label.place(relwidth=1, relheight=1)
 
+        self.level_file = level_file
         self.board = Board(Board.init_board(level_file))
         self.canvas = tk.Canvas(self.root, width=390, height=390)
-        self.canvas.place(relx=0.5, rely=0.5, anchor="center")
+        self.canvas.place(relx=0.3, rely=0.5, anchor="center")
 
         self.create_buttons(self.root)
         self.draw_board()
@@ -74,16 +76,21 @@ class RushHourGame:
 
     def create_buttons(self, root):
         solve_button = tk.Button(root, text="DFS", font=("Helvetica", 12, "bold"), command=self.dfs_solve, height=2, width=10)
-        solve_button.place(relx=0.3, rely=0.15, anchor="center")
-
-        restart_button = tk.Button(root, text="Restart", font=("Helvetica", 12, "bold"), command=self.restart_game, height=2, width=10)
-        restart_button.place(relx=0.5, rely=0.9, anchor="center")
+        solve_button.place(relx=0.12, rely=0.15, anchor="center")
 
         a_star_button = tk.Button(root, text="A*", font=("Helvetica", 12, "bold"), command=self.a_star_solve, height=2, width=10)
-        a_star_button.place(relx=0.5, rely=0.15, anchor="center")
+        a_star_button.place(relx=0.29, rely=0.15, anchor="center")
 
         greedy_button = tk.Button(root, text="Greedy Search", font=("Helvetica", 12, "bold"), command=self.greedy_solve, height=2, width=11)
-        greedy_button.place(relx=0.7, rely=0.15, anchor="center")
+        greedy_button.place(relx=0.47, rely=0.15, anchor="center")
+
+        restart_button = tk.Button(root, text="Restart", font=("Helvetica", 12, "bold"), command=self.restart_game, height=2, width=10)
+        restart_button.place(relx=0.2, rely=0.84, anchor="center")
+
+        restart_button = tk.Button(root, text="Stop", font=("Helvetica", 12, "bold"), command=self.restart_game, height=2, width=10)
+        restart_button.place(relx=0.38, rely=0.84, anchor="center")
+
+
 
     def bind_keys(self):
         self.root.bind("<Up>", lambda event: self.move_car("up"))
@@ -139,6 +146,9 @@ class RushHourGame:
         self.board = Board(Board.init_board(self.level_file))
         self.selected_car = None
         self.update_board_view()
+
+    #def stop_game(self):
+
 
     def visualize_solution(self, solution):
         def perform_step(index):
