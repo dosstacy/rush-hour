@@ -23,6 +23,10 @@ class RushHourGame:
         self.selected_car = None
         self.create_main_menu()
 
+        self.is_paused = False
+        self.current_index = 0
+        self.solution = []
+
     def create_main_menu(self):
         self.main_menu_frame = tk.Frame(self.root)
         self.main_menu_frame.pack(fill="both", expand=True)
@@ -87,7 +91,7 @@ class RushHourGame:
         restart_button = tk.Button(root, text="Restart", font=("Helvetica", 12, "bold"), command=self.restart_game, height=2, width=10)
         restart_button.place(relx=0.2, rely=0.84, anchor="center")
 
-        restart_button = tk.Button(root, text="Stop", font=("Helvetica", 12, "bold"), command=self.restart_game, height=2, width=10)
+        restart_button = tk.Button(root, text="Pause", font=("Helvetica", 12, "bold"), command=self.toggle_pause, height=2, width=10)
         restart_button.place(relx=0.38, rely=0.84, anchor="center")
 
 
@@ -147,20 +151,31 @@ class RushHourGame:
         self.selected_car = None
         self.update_board_view()
 
-    #def stop_game(self):
-
-
     def visualize_solution(self, solution):
-        def perform_step(index):
-            if index >= len(solution):
-                is_win_position(self.board)
-                return
-            car_name, direction = solution[index]
-            self.board.move_car(self.board.cars[car_name], direction)
-            self.update_board_view()
-            self.root.after(500, perform_step, index + 1)
+        self.solution = solution
+        self.current_index = 0
+        self.is_paused = False
+        self._perform_step()
 
-        perform_step(0)
+    def _perform_step(self):
+        if self.is_paused or self.current_index >= len(self.solution):
+            return
+
+        car_name, direction = self.solution[self.current_index]
+        self.board.move_car(self.board.cars[car_name], direction)
+        self.update_board_view()
+
+        self.current_index += 1
+        if self.current_index < len(self.solution):
+            self.root.after(500, self._perform_step)
+        else:
+            is_win_position(self.board)
+
+    def toggle_pause(self):
+        """Toggle between pause and resume."""
+        self.is_paused = not self.is_paused
+        if not self.is_paused:  # If resuming, call _perform_step
+            self._perform_step()
 
     ################################################## DFS #################################################################
 
