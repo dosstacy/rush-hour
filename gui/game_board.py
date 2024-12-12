@@ -5,16 +5,19 @@ from elements.Board import Board
 from algorithms.dfs import Dfs
 from algorithms.a_star import A_star
 from algorithms.greedy_search import GreedySearch
+import textwrap
 
 class GameBoard:
     def __init__(self, game):
         self.game = game
         self.frame = tk.Frame(self.game.root)
         self.canvas = tk.Canvas(self.game.root, width=390, height=390)
+        self.canvas_info = tk.Canvas(self.game.root, width=150, height=390)
         self.selected_car = None
         self.is_paused = False
         self.current_index = 0
         self.solution = []
+        self.algo_info = ""
 
     def start(self, level_file):
         self.frame.pack(fill="both", expand=True)
@@ -26,6 +29,7 @@ class GameBoard:
         self.level_file = level_file
         self.board = Board(Board.init_board(level_file))
         self.canvas.place(relx=0.3, rely=0.5, anchor="center")
+        self.canvas_info.place(relx=0.8, rely=0.5, anchor="center")
         self.create_buttons(self.game.root)
         self.draw_board()
         self.bind_keys()
@@ -102,6 +106,8 @@ class GameBoard:
             self.game.root.after(500, self._perform_step)
         else:
             is_win_position(self.board)
+            self.show_win_text()
+
 
     def toggle_pause(self):
         self.is_paused = not self.is_paused
@@ -109,10 +115,11 @@ class GameBoard:
             self._perform_step()
 
     def restart_game(self):
-        print("Restarting the game...")
         self.board = Board(Board.init_board(self.level_file))
         self.selected_car = None
         self.update_board_view()
+        self.algo_info = ""
+        self.show_steps()
 
     def update_board_view(self):
         self.draw_board()
@@ -121,33 +128,47 @@ class GameBoard:
         solver = Dfs(self.board)
         solution = solver.solve()
         if solution:
-            print("Solution found!")
-            print(f"Solution found in {len(solution)} steps.")
+            self.algo_info = f"The solution was found using the DFS algorithm in {len(solution)} steps."
             self.visualize_solution(solution)
         else:
-            print("No solution found!")
+            self.algo_info = "No solution found with DFS!"
+        self.show_steps()
 
     def a_star_solve(self):
         print("Solving with A*...")
         solver = A_star(self.board)
         solution = solver.solve()
         if solution:
-            print("Solution found!")
-            print(f"A* Solution found in {len(solution)} steps.")
+            self.algo_info = f"A* Solution found in {len(solution)} steps."
             self.visualize_solution(solution)
         else:
-            print("No solution found with A*!")
+            self.algo_info = "No solution found with A*!"
+        self.show_steps()
 
     def greedy_solve(self):
         print("Solving with Greedy Search...")
         solver = GreedySearch(self.board)
         solution = solver.solve()
         if solution:
-            print("Solution found!")
-            print(f"Greedy Search solution found in {len(solution)} steps.")
+            self.algo_info = f"Greedy Search solution found in {len(solution)} steps."
             self.visualize_solution(solution)
         else:
-            print("No solution found with Greedy Search!")
+            self.algo_info = "No solution found with Greedy Search!"
+        self.show_steps()
 
     def hide(self):
         self.frame.pack_forget()
+
+    def show_steps(self):
+        self.canvas_info.delete("all")
+
+        max_width = 17
+        wrapped_text = textwrap.fill(self.algo_info, width=max_width)
+
+        self.canvas_info.create_text(75, 120, text=wrapped_text, font=("Arial", 13), anchor="center")
+
+    def show_win_text(self):
+        max_width = 16
+        wrapped_text = textwrap.fill("Congratulations! This is win position!", width=max_width)
+
+        self.canvas_info.create_text(75, 220, text=wrapped_text, font=("Arial", 13, "bold"), anchor="center", fill="red")

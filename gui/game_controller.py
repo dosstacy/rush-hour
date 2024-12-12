@@ -9,7 +9,7 @@ class RushHourGame:
         self.main_menu = MainMenu(self)
         self.level_menu = LevelMenu(self)
         self.game_board = GameBoard(self)
-        self.show_main_menu()  # Показуємо головне меню при запуску
+        self.show_main_menu()
 
     def show_main_menu(self):
         self.level_menu.hide()
