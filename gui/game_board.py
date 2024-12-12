@@ -18,6 +18,9 @@ class GameBoard:
         self.current_index = 0
         self.solution = []
         self.algo_info = ""
+        self.car_colors = {}
+        self.color_list = ["blue", "green", "yellow", "purple", "orange", "pink", "cyan", "magenta", "brown", "lime"]
+        self.color_index = 0
 
     def start(self, level_file):
         self.frame.pack(fill="both", expand=True)
@@ -70,12 +73,24 @@ class GameBoard:
     def draw_board(self):
         self.canvas.delete("all")
         cell_size = 400 // self.board.grid_size
+
         for row_idx, row in enumerate(self.board.grid):
             for col_idx, cell in enumerate(row):
                 x1, y1 = col_idx * cell_size, row_idx * cell_size
                 x2, y2 = x1 + cell_size, y1 + cell_size
-                color = "white" if cell == "." else "red" if cell == "A" else "lightblue"
+
+                if cell == ".":
+                    color = "white"
+                elif cell == "A":
+                    color = "red"
+                else:
+                    if cell not in self.car_colors:
+                        self.car_colors[cell] = self.color_list[self.color_index]
+                        self.color_index = (self.color_index + 1) % len(self.color_list)
+                    color = self.car_colors[cell]
+
                 rect = self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
+
                 if cell != ".":
                     self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=cell, font=("Arial", 14))
                     self.canvas.tag_bind(rect, "<Button-1>", lambda event, car_name=cell: self.select_car(car_name))
