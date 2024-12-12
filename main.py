@@ -1,7 +1,6 @@
 from gui.game_controller import RushHourGame
 import tkinter as tk
 
-##TODO: win
 ##TODO: кнопка "повернути назад до рівнів"?
 
 def run_game():

@@ -35,25 +35,37 @@ class GameBoard:
         self.bind_keys()
 
     def create_buttons(self, root):
+        self.buttons = []
+
         solve_button = tk.Button(root, text="DFS", font=("Helvetica", 12, "bold"), command=self.dfs_solve, height=2,
                                  width=10)
         solve_button.place(relx=0.12, rely=0.15, anchor="center")
+        self.buttons.append(solve_button)
 
         a_star_button = tk.Button(root, text="A*", font=("Helvetica", 12, "bold"), command=self.a_star_solve, height=2,
                                   width=10)
         a_star_button.place(relx=0.29, rely=0.15, anchor="center")
+        self.buttons.append(a_star_button)
 
         greedy_button = tk.Button(root, text="Greedy Search", font=("Helvetica", 12, "bold"), command=self.greedy_solve,
                                   height=2, width=11)
         greedy_button.place(relx=0.47, rely=0.15, anchor="center")
+        self.buttons.append(greedy_button)
 
         restart_button = tk.Button(root, text="Restart", font=("Helvetica", 12, "bold"), command=self.restart_game,
                                    height=2, width=10)
         restart_button.place(relx=0.2, rely=0.84, anchor="center")
+        self.buttons.append(restart_button)
 
-        restart_button = tk.Button(root, text="Pause", font=("Helvetica", 12, "bold"), command=self.toggle_pause,
+        pause_button = tk.Button(root, text="Pause", font=("Helvetica", 12, "bold"), command=self.toggle_pause,
                                    height=2, width=10)
-        restart_button.place(relx=0.38, rely=0.84, anchor="center")
+        pause_button.place(relx=0.38, rely=0.84, anchor="center")
+        self.buttons.append(pause_button)
+
+        return_button = tk.Button(root, text="Back to levels", font=("Helvetica", 9, "bold"), command=self.game.levels_back,
+                                   height=1, width=12)
+        return_button.place(relx=0.11, rely=0.05, anchor="center")
+        self.buttons.append(return_button)
 
     def draw_board(self):
         self.canvas.delete("all")
@@ -157,6 +169,14 @@ class GameBoard:
         self.show_steps()
 
     def hide(self):
+        self.frame.pack_forget()
+
+    def hide_elements(self):
+        for button in self.buttons:
+            button.place_forget()
+        self.canvas.place_forget()
+        self.canvas_info.place_forget()
+        self.bg_label.place_forget()
         self.frame.pack_forget()
 
     def show_steps(self):

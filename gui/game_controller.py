@@ -25,3 +25,8 @@ class RushHourGame:
         self.main_menu.hide()
         self.level_menu.hide()
         self.game_board.start(level_file)
+
+    def levels_back(self):
+        self.main_menu.hide()
+        self.game_board.hide_elements()
+        self.level_menu.show()
