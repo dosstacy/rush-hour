@@ -1,6 +1,5 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-from utils import is_win_position
 from elements.Board import Board
 from algorithms.dfs import Dfs
 from algorithms.a_star import A_star
@@ -132,7 +131,7 @@ class GameBoard:
         if self.current_index < len(self.solution):
             self.game.root.after(500, self._perform_step)
         else:
-            is_win_position(self.board)
+            Board.is_win_position(self.board)
             self.show_win_text()
 
 

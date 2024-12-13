@@ -1,16 +1,16 @@
 import heapq
 import itertools
-from utils import is_win_position, WIN_X, WIN_Y, get_neighbors, MAIN_CAR
+from elements.Board import Board
 from .additional_logic import heuristic, reconstruct_path
 
 class GreedySearch:
     def __init__(self, board):
         self.board = board
-        self.counter = itertools.count()  # Унікальний індекс для кожного елемента
+        self.counter = itertools.count()
 
     def solve(self):
         open_set = []
-        visited = set()  # Для уникнення дублювання станів
+        visited = set()
         heapq.heappush(open_set, (heuristic(self.board), next(self.counter), self.board))
         came_from = {}
 
@@ -21,16 +21,14 @@ class GreedySearch:
                 print(f"Steps processed: {steps}, Open set size: {len(open_set)}")
 
             _, _, current = heapq.heappop(open_set)
-            if is_win_position(current):
-                # Повертає послідовність ходів для візуалізації
+            if Board.is_win_position(current):
                 return reconstruct_path(came_from, current)
 
             visited.add(hash(current))
-            for neighbor, action in get_neighbors(current):
+            for neighbor, action in Board.get_neighbors(current):
                 if hash(neighbor) in visited:
                     continue
 
-                # Обчислюємо тільки евристичну функцію для Greedy Search
                 f_score = heuristic(neighbor)
 
                 heapq.heappush(open_set, (f_score, next(self.counter), neighbor))

@@ -1,16 +1,16 @@
 import heapq
 import itertools
-from utils import is_win_position, WIN_X, WIN_Y, get_neighbors, MAIN_CAR
+from elements.Board import Board
 from .additional_logic import heuristic, reconstruct_path
 
 class A_star:
         def __init__(self, board):
             self.board = board
-            self.counter = itertools.count()  # Унікальний індекс для кожного елемента
+            self.counter = itertools.count()
 
         def solve(self):
             open_set = []
-            visited = set()  # Для уникнення дублювання станів
+            visited = set()
             heapq.heappush(open_set, (0, next(self.counter), self.board))
             came_from = {}
             g_score = {self.board: 0}
@@ -23,12 +23,11 @@ class A_star:
                     print(f"Steps processed: {steps}, Open set size: {len(open_set)}")
 
                 _, _, current = heapq.heappop(open_set)
-                if is_win_position(current):
-                    #повертає послідовність ходів для візуалізації
+                if Board.is_win_position(current):
                     return reconstruct_path(came_from, current)
 
                 visited.add(hash(current))
-                for neighbor, action in get_neighbors(current):
+                for neighbor, action in Board.get_neighbors(current):
                     if hash(neighbor) in visited:
                         continue
 

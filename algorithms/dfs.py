@@ -1,4 +1,4 @@
-from utils import is_win_position, get_neighbors
+from elements.Board import Board
 
 class Dfs:
         def __init__(self, board):
@@ -16,10 +16,10 @@ class Dfs:
                     continue
                 visited.add(state_key)
 
-                if is_win_position(current):
+                if Board.is_win_position(current):
                     return path
 
-                for neighbor, action in get_neighbors(current):
+                for neighbor, action in Board.get_neighbors(current):
                     stack.append((neighbor, path + [action]))
 
             print("No solution found!")
