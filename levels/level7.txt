@@ -1,6 +1,6 @@
-. . B B B C
-. . D . . C
-A A D . . C
-. . . . . .
-. . E E G G
-. . . . . .
+. K K L M M
+U E . L F J
+U E A A F J
+B B C . D J
+. . C . D .
+. . . G G G
