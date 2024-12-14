@@ -95,12 +95,12 @@ class GameBoard:
                     self.canvas.tag_bind(rect, "<Button-1>", lambda event, car_name=cell: self.select_car(car_name))
 
     def bind_keys(self):
-        self.game.root.bind("<Up>", lambda event: self.move_car("up"))
-        self.game.root.bind("<Down>", lambda event: self.move_car("down"))
-        self.game.root.bind("<Left>", lambda event: self.move_car("left"))
-        self.game.root.bind("<Right>", lambda event: self.move_car("right"))
+        self.game.root.bind("<Up>", lambda event: self.check_position("up"))
+        self.game.root.bind("<Down>", lambda event: self.check_position("down"))
+        self.game.root.bind("<Left>", lambda event: self.check_position("left"))
+        self.game.root.bind("<Right>", lambda event: self.check_position("right"))
 
-    def move_car(self, direction):
+    def check_position(self, direction):
         if self.selected_car is None:
             print("No car selected!")
             return
@@ -110,6 +110,8 @@ class GameBoard:
             return
         self.board.move_car(car, direction)
         self.draw_board()
+        if Board.is_win_position(self.board):
+            self.show_win_text()
 
     def select_car(self, car_name):
         self.selected_car = car_name
@@ -205,4 +207,4 @@ class GameBoard:
         max_width = 16
         wrapped_text = textwrap.fill("Congratulations! This is win position!", width=max_width)
 
-        self.canvas_info.create_text(75, 220, text=wrapped_text, font=("Arial", 13, "bold"), anchor="center", fill="red")
+        self.canvas_info.create_text(75, 200, text=wrapped_text, font=("Arial", 13, "bold"), anchor="center", fill="red")

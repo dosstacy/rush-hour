@@ -89,11 +89,9 @@ class Board:
         return True
 
     def __hash__(self):
-        """Генерує хеш для стану дошки."""
-        return hash(tuple(tuple(row) for row in self.grid))  # Унікальне представлення стану
+        return hash(tuple(tuple(row) for row in self.grid))
 
     def __eq__(self, other):
-        """Перевіряє еквівалентність двох станів."""
         if not isinstance(other, Board):
             return False
         return self.grid == other.grid
