@@ -5,7 +5,6 @@ from algorithms.dfs import Dfs
 from algorithms.a_star import A_star
 from algorithms.greedy_search import GreedySearch
 import textwrap
-from constants import WIN_X, WIN_Y
 
 
 class GameBoard:
@@ -97,7 +96,8 @@ class GameBoard:
                     self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=cell, font=("Arial", 10))
                     self.canvas.tag_bind(rect, "<Button-1>", lambda event, car_name=cell: self.select_car(car_name))
 
-                text_label = tk.Label(self.frame, width=5, height=2, text="Exit", font=("Arial", 14, "bold"), bg="orange")
+                text_label = tk.Label(self.frame, width=5, height=2, text="Exit", font=("Arial", 14, "bold"),
+                                      bg="orange")
                 text_label.place(relx=0.6, rely=0.46, anchor="center")
 
     def bind_keys(self):
@@ -196,6 +196,7 @@ class GameBoard:
         for button in self.buttons:
             button.place_forget()
         self.canvas.place_forget()
+        self.canvas_info.delete("all")
         self.canvas_info.place_forget()
         self.bg_label.place_forget()
         self.frame.pack_forget()
