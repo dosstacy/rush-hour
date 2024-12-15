@@ -12,7 +12,6 @@ class A_star:
         self.counter = itertools.count()
 
     def solve(self):
-        # Ініціалізація статистики
         start_time = time.time()
         tracemalloc.start()
 
@@ -23,23 +22,20 @@ class A_star:
         g_score = {self.board: 0}
         f_score = {self.board: heuristic(self.board)}
 
-        steps = 0  # Кількість ітерацій
+        steps = 0
 
         while open_set:
             steps += 1
 
-            # Лог кожні 1000 кроків
             if steps % 1000 == 0:
                 print(f"Steps processed: {steps}, Open set size: {len(open_set)}")
 
             _, _, current = heapq.heappop(open_set)
             if Board.is_win_position(current):
-                # Завершення замірів
                 end_time = time.time()
                 current_memory, peak_memory = tracemalloc.get_traced_memory()
                 tracemalloc.stop()
 
-                # Вивід статистики
                 print("Solution found!")
                 print(f"Time taken: {end_time - start_time:.2f} seconds")
                 print(f"Steps taken: {steps}")
@@ -62,7 +58,6 @@ class A_star:
                     f_score[neighbor] = tentative_g_score + heuristic(neighbor)
                     heapq.heappush(open_set, (f_score[neighbor], next(self.counter), neighbor))
 
-        # Завершення замірів, якщо рішення не знайдено
         end_time = time.time()
         current_memory, peak_memory = tracemalloc.get_traced_memory()
         tracemalloc.stop()

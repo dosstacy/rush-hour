@@ -7,13 +7,12 @@ class Dfs:
         self.board = board
 
     def solve(self):
-        # Ініціалізація статистики
         start_time = time.time()
         tracemalloc.start()
 
         stack = [(self.board, [])]
         visited = set()
-        steps = 0  # Кількість ітерацій
+        steps = 0
 
         while stack:
             current, path = stack.pop()
@@ -25,12 +24,10 @@ class Dfs:
             visited.add(state_key)
 
             if Board.is_win_position(current):
-                # Завершення замірів
                 end_time = time.time()
                 current_memory, peak_memory = tracemalloc.get_traced_memory()
                 tracemalloc.stop()
 
-                # Вивід статистики
                 print("Solution found!")
                 print(f"Time taken: {end_time - start_time:.2f} seconds")
                 print(f"Steps taken: {steps}")
@@ -43,7 +40,6 @@ class Dfs:
             for neighbor, action in Board.get_neighbors(current):
                 stack.append((neighbor, path + [action]))
 
-        # Завершення замірів, якщо рішення не знайдено
         end_time = time.time()
         current_memory, peak_memory = tracemalloc.get_traced_memory()
         tracemalloc.stop()

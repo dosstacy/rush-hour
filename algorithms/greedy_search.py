@@ -11,7 +11,6 @@ class GreedySearch:
         self.counter = itertools.count()
 
     def solve(self):
-        # Ініціалізація статистики
         start_time = time.time()
         tracemalloc.start()
 
@@ -20,9 +19,8 @@ class GreedySearch:
         heapq.heappush(open_set, (heuristic(self.board), next(self.counter), self.board))
         came_from = {}
 
-        steps = 0  # Лічильник ітерацій
-        max_open_set_size = 0  # Максимальний розмір відкритої множини
-
+        steps = 0
+        max_open_set_size = 0
         while open_set:
             steps += 1
             max_open_set_size = max(max_open_set_size, len(open_set))
@@ -35,12 +33,10 @@ class GreedySearch:
             visited.add(state_key)
 
             if Board.is_win_position(current):
-                # Завершення замірів
                 end_time = time.time()
                 current_memory, peak_memory = tracemalloc.get_traced_memory()
                 tracemalloc.stop()
 
-                # Вивід статистики
                 solution_path = reconstruct_path(came_from, current)
                 print("Solution found!")
                 print(f"Time taken: {end_time - start_time:.2f} seconds")
@@ -61,7 +57,6 @@ class GreedySearch:
                 heapq.heappush(open_set, (f_score, next(self.counter), neighbor))
                 came_from[neighbor] = (current, action)
 
-        # Завершення замірів, якщо рішення не знайдено
         end_time = time.time()
         current_memory, peak_memory = tracemalloc.get_traced_memory()
         tracemalloc.stop()
