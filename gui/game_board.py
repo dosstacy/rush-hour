@@ -96,7 +96,7 @@ class GameBoard:
                     self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=cell, font=("Arial", 10))
                     self.canvas.tag_bind(rect, "<Button-1>", lambda event, car_name=cell: self.select_car(car_name))
 
-                text_label = tk.Label(self.frame, width=5, height=2, text="Exit", font=("Arial", 14, "bold"),
+                text_label = tk.Label(self.frame, width=5, height=2, text="<- Exit", font=("Arial", 14, "bold"),
                                       bg="orange")
                 text_label.place(relx=0.6, rely=0.46, anchor="center")
 
