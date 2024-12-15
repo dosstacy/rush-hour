@@ -5,6 +5,8 @@ from algorithms.dfs import Dfs
 from algorithms.a_star import A_star
 from algorithms.greedy_search import GreedySearch
 import textwrap
+from constants import WIN_X, WIN_Y
+
 
 class GameBoard:
     def __init__(self, game):
@@ -60,12 +62,13 @@ class GameBoard:
         self.buttons.append(restart_button)
 
         pause_button = tk.Button(root, text="Pause", font=("Helvetica", 12, "bold"), command=self.toggle_pause,
-                                   height=2, width=10)
+                                 height=2, width=10)
         pause_button.place(relx=0.38, rely=0.84, anchor="center")
         self.buttons.append(pause_button)
 
-        return_button = tk.Button(root, text="Back to levels", font=("Helvetica", 9, "bold"), command=self.game.levels_back,
-                                   height=1, width=12)
+        return_button = tk.Button(root, text="Back to levels", font=("Helvetica", 9, "bold"),
+                                  command=self.game.levels_back,
+                                  height=1, width=12)
         return_button.place(relx=0.11, rely=0.05, anchor="center")
         self.buttons.append(return_button)
 
@@ -91,8 +94,11 @@ class GameBoard:
                 rect = self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
 
                 if cell != ".":
-                    self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=cell, font=("Arial", 14))
+                    self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=cell, font=("Arial", 10))
                     self.canvas.tag_bind(rect, "<Button-1>", lambda event, car_name=cell: self.select_car(car_name))
+
+                text_label = tk.Label(self.frame, width=5, height=2, text="Exit", font=("Arial", 14, "bold"), bg="orange")
+                text_label.place(relx=0.6, rely=0.46, anchor="center")
 
     def bind_keys(self):
         self.game.root.bind("<Up>", lambda event: self.check_position("up"))
@@ -135,7 +141,6 @@ class GameBoard:
         else:
             Board.is_win_position(self.board)
             self.show_win_text()
-
 
     def toggle_pause(self):
         self.is_paused = not self.is_paused
@@ -207,4 +212,5 @@ class GameBoard:
         max_width = 16
         wrapped_text = textwrap.fill("Congratulations! This is win position!", width=max_width)
 
-        self.canvas_info.create_text(75, 200, text=wrapped_text, font=("Arial", 13, "bold"), anchor="center", fill="red")
+        self.canvas_info.create_text(75, 200, text=wrapped_text, font=("Arial", 13, "bold"), anchor="center",
+                                     fill="red")
